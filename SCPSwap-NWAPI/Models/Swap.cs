@@ -119,7 +119,7 @@ namespace SCPSwap_NWAPI.Models
         /// </summary>
         public void Cancel()
         {
-            Sender.SendBroadcast("Swap request cancelled!", 5, shouldClearPrevious: true);
+            Sender.SendBroadcast("Tauschanfrage abgerochen!", 5, shouldClearPrevious: true);
             Destroy();
         }
         
@@ -128,7 +128,7 @@ namespace SCPSwap_NWAPI.Models
         /// </summary>
         public void Decline()
         {
-            Sender.SendBroadcast($"{Receiver.DisplayNickname ?? Receiver.Nickname} has declined your swap request.", 5, shouldClearPrevious: true);
+            Sender.SendBroadcast($"{Receiver.DisplayNickname ?? Receiver.Nickname} hat deine Tauschanfrage abgelehnt.", 5, shouldClearPrevious: true);
             Destroy();
         }
         
@@ -150,9 +150,11 @@ namespace SCPSwap_NWAPI.Models
         {
             string consoleMessage = Plugin.Instance.Messages.RequestConsoleMessage.Message;
             consoleMessage = consoleMessage.Replace("$SenderName", Sender.DisplayNickname ?? Sender.Nickname);
-            consoleMessage = consoleMessage.Replace("$RoleName", Sender.Role.ToString());
+            consoleMessage = consoleMessage.Replace("$ReceiverName", Receiver.DisplayNickname ?? Receiver.Nickname);
+            consoleMessage = consoleMessage.Replace("$SenderRoleName", Sender.Role.ToString());
+            consoleMessage = consoleMessage.Replace("$ReceiverRoleName", Receiver.Role.ToString());
             Receiver.SendConsoleMessage(consoleMessage, Plugin.Instance.Messages.RequestConsoleMessage.Color);
-            Receiver.SendBroadcast(Plugin.Instance.Messages.RequestBroadcast.Message, Plugin.Instance.Messages.RequestBroadcast.Duration);
+            Receiver.SendBroadcast(Plugin.Instance.Messages.RequestBroadcast.Message, Plugin.Instance.Messages.RequestBroadcast.Duration, shouldClearPrevious: true);
         }
 
         [PluginEvent(ServerEventType.PlayerChangeRole)]
