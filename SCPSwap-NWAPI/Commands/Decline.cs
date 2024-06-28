@@ -11,26 +11,34 @@ namespace SCPSwap_NWAPI.Commands
         
         public string[] Aliases { get; set; } = { "no", "d" };
         
-        public string Description { get; set; } = "Rejects an active swap request.";
-        
+        public string Description { get; set; } = "Lehnt die aktuelle Anfrage ab.";
+
+        bool ICommand.SanitizeResponse
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             Player playerSender = Player.Get(sender);
             if (playerSender == null)
             {
-                response = "This command must be from the game level.";
+                response = "Dieser Befehl muss in der Spielkonsole ausgeführt werden.";
                 return false;
             }
 
             Swap swap = Swap.FromReceiver(playerSender);
             if (swap == null)
             {
-                response = "You do not have an active swap request.";
+                response = "Du hast aktuell keine offenen Tauschanfragen.";
                 return false;
             }
 
             swap.Decline();
-            response = "Swap request cancelled!";
+            response = "Tauschanfrage abgelehnt!";
             return true;
         }
     }
